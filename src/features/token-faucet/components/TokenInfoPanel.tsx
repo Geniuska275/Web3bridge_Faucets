@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTokenName, getTokenSymbol, getDecimals, getTotalSupply, getMaxSupply, getBalance } from "@/services/tokenService";
+import { getTokenName, getTokenSymbol, getDecimals, getTotalSupply, getMaxSupply, getBalance } from "../services/tokenService";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Activity, Database, Hash, Layers, Tag, Wallet } from "lucide-react";
 

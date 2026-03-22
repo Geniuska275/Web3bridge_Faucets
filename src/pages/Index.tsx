@@ -1,10 +1,10 @@
 import { useState, useCallback } from "react";
-import { DashboardHeader } from "@/components/DashboardHeader";
-import { WalletConnect } from "@/components/WalletConnect";
-import { TokenInfoPanel } from "@/components/TokenInfoPanel";
-import { RequestTokensCard } from "@/components/RequestTokensCard";
-import { MintTokensCard } from "@/components/MintTokensCard";
-import { TransferTokensCard } from "@/components/TransferTokensCard";
+import { DashboardHeader } from "@/features/token-faucet/components/DashboardHeader";
+import { WalletConnect } from "@/features/token-faucet/components/WalletConnect";
+import { TokenInfoPanel } from "@/features/token-faucet/components/TokenInfoPanel";
+import { RequestTokensCard } from "@/features/token-faucet/components/RequestTokensCard";
+import { MintTokensCard } from "@/features/token-faucet/components/MintTokensCard";
+import { TransferTokensCard } from "@/features/token-faucet/components/TransferTokensCard";
 
 const Index = () => {
   const [address, setAddress] = useState("");

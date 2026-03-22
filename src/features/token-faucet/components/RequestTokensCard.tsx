@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { requestTokens, getCooldownRemaining } from "@/services/tokenService";
-import { useCountdown, formatCountdown } from "@/hooks/useCountdown";
-import { Droplets, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { requestTokens, getCooldownRemaining } from "../services/tokenService";
+import { useCountdown, formatCountdown } from "../hooks/useCountdown";
+import { Droplets, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 interface RequestTokensCardProps {
@@ -35,7 +35,6 @@ export function RequestTokensCard({ address, onSuccess }: RequestTokensCardProps
     if (result.success) {
       toast.success(result.message);
       onSuccess();
-      // Start cooldown
       const ms = await getCooldownRemaining(address);
       setCooldownMs(ms);
       reset(ms);

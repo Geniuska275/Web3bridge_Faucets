@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { mintTokens } from "@/services/tokenService";
+import { mintTokens } from "../services/tokenService";
 import { Hammer } from "lucide-react";
 import { toast } from "sonner";
 
