@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getTokenName, getTokenSymbol, getDecimals, getTotalSupply, getMaxSupply, getBalance } from "../services/tokenService";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Activity, Database, Hash, Layers, Tag, Wallet } from "lucide-react";
+import { useReadFaucet } from "@/hooks/specific/useReadTodo";
+
 
 interface TokenInfoPanelProps {
   address: string;
@@ -15,14 +17,24 @@ const infoCards = [
 ] as const;
 
 export function TokenInfoPanel({ address, refreshKey }: TokenInfoPanelProps) {
+
+  const { getTokenName, getSymbol, getTotalSupply, getMaxSupply, getBalance }=useReadFaucet()
+
+  const TokenName=getTokenName()
+  const TokenSymbol=getSymbol()
+  const TokenSupply=getTotalSupply()
+  const TokenMaxSupply=getMaxSupply()
+  const TokenBalance=getBalance()
+  console.log(TokenBalance)
   const nameQ = useQuery({ queryKey: ["tokenName"], queryFn: getTokenName, staleTime: Infinity });
-  const symbolQ = useQuery({ queryKey: ["tokenSymbol"], queryFn: getTokenSymbol, staleTime: Infinity });
+  const symbolQ = useQuery({ queryKey: ["tokenSymbol"], queryFn: getSymbol, staleTime: Infinity });
+  console.log(symbolQ)
   const decimalsQ = useQuery({ queryKey: ["tokenDecimals"], queryFn: getDecimals, staleTime: Infinity });
   const supplyQ = useQuery({ queryKey: ["totalSupply", refreshKey], queryFn: getTotalSupply });
   const maxSupplyQ = useQuery({ queryKey: ["maxSupply"], queryFn: getMaxSupply, staleTime: Infinity });
   const balanceQ = useQuery({
     queryKey: ["balance", address, refreshKey],
-    queryFn: () => getBalance(address),
+    queryFn: () => getBalance(),
     enabled: !!address,
   });
 

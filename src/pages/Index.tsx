@@ -5,9 +5,11 @@ import { TokenInfoPanel } from "@/features/token-faucet/components/TokenInfoPane
 import { RequestTokensCard } from "@/features/token-faucet/components/RequestTokensCard";
 import { MintTokensCard } from "@/features/token-faucet/components/MintTokensCard";
 import { TransferTokensCard } from "@/features/token-faucet/components/TransferTokensCard";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 const Index = () => {
-  const [address, setAddress] = useState("");
+  // const [address, setAddress] = useState("");
+    const { address } = useAppKitAccount();
   const [refreshKey, setRefreshKey] = useState(0);
 
   const handleRefresh = useCallback(() => {
@@ -18,7 +20,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <DashboardHeader />
       <main className="container py-8 space-y-6">
-        <WalletConnect address={address} onConnect={setAddress} />
+       
         <TokenInfoPanel address={address} refreshKey={refreshKey} />
         <div className="grid gap-6 md:grid-cols-3">
           <RequestTokensCard address={address} onSuccess={handleRefresh} />

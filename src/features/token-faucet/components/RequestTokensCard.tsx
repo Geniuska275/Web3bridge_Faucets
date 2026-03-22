@@ -4,6 +4,7 @@ import { requestTokens, getCooldownRemaining } from "../services/tokenService";
 import { useCountdown, formatCountdown } from "../hooks/useCountdown";
 import { Droplets, Clock } from "lucide-react";
 import { toast } from "sonner";
+import { useWriteTodo } from "@/hooks/specific/useWriteTodo";
 
 interface RequestTokensCardProps {
   address: string;
@@ -14,6 +15,8 @@ export function RequestTokensCard({ address, onSuccess }: RequestTokensCardProps
   const [loading, setLoading] = useState(false);
   const [cooldownMs, setCooldownMs] = useState(0);
   const { remaining, reset, isActive } = useCountdown(cooldownMs);
+   const { requestToken } = useWriteTodo;
+  
 
   useEffect(() => {
     if (!address) return;
@@ -21,7 +24,7 @@ export function RequestTokensCard({ address, onSuccess }: RequestTokensCardProps
       setCooldownMs(ms);
       reset(ms);
     });
-  }, [address]);
+  }, [address, reset]);
 
   const handleRequest = async () => {
     if (!address) {
@@ -29,7 +32,7 @@ export function RequestTokensCard({ address, onSuccess }: RequestTokensCardProps
       return;
     }
     setLoading(true);
-    const result = await requestTokens(address);
+    const result = await requestToken(address);
     setLoading(false);
 
     if (result.success) {
@@ -54,7 +57,7 @@ export function RequestTokensCard({ address, onSuccess }: RequestTokensCardProps
         <h2 className="font-semibold text-lg">Request Tokens</h2>
       </div>
       <p className="text-sm text-muted-foreground mb-4">
-        Claim 100 VRD tokens from the faucet. One claim per 24 hours.
+        Claim 100 GTK tokens from the faucet. One claim per 24 hours.
       </p>
 
       {isActive ? (

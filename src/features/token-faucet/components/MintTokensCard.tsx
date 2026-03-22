@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { mintTokens } from "../services/tokenService";
 import { Hammer } from "lucide-react";
 import { toast } from "sonner";
+import { useWriteTodo } from "@/hooks/specific/useWriteTodo";
+import { ethers } from "ethers";
 
 interface MintTokensCardProps {
   address: string;
@@ -13,7 +15,7 @@ interface MintTokensCardProps {
 export function MintTokensCard({ address, onSuccess }: MintTokensCardProps) {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
-
+   const { mintToken, isCreatingTask } = useWriteTodo();
   const handleMint = async () => {
     if (!address) {
       toast.error("Connect your wallet first");
@@ -25,16 +27,16 @@ export function MintTokensCard({ address, onSuccess }: MintTokensCardProps) {
       return;
     }
     setLoading(true);
-    const result = await mintTokens(address, num);
+    const result = await mintToken(address,);
     setLoading(false);
 
-    if (result.success) {
-      toast.success(result.message);
-      setAmount("");
-      onSuccess();
-    } else {
-      toast.error(result.message);
-    }
+    // if (result.success) {
+    //   toast.success(result.message);
+    //   setAmount("");
+    //   onSuccess();
+    // } else {
+    //   toast.error(result.message);
+    // }
   };
 
   return (
@@ -44,7 +46,7 @@ export function MintTokensCard({ address, onSuccess }: MintTokensCardProps) {
         <h2 className="font-semibold text-lg">Mint Tokens</h2>
       </div>
       <p className="text-sm text-muted-foreground mb-4">
-        Mint new VRD tokens to your wallet. Max 10,000 per transaction.
+        Mint new GTK tokens to your wallet. Max 10,000 per transaction.
       </p>
       <div className="flex gap-2">
         <Input
