@@ -6,13 +6,16 @@ import { Hammer } from "lucide-react";
 import { toast } from "sonner";
 import { useWriteTodo } from "@/hooks/specific/useWriteTodo";
 import { ethers } from "ethers";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 interface MintTokensCardProps {
   address: string;
   onSuccess: () => void;
 }
 
-export function MintTokensCard({ address, onSuccess }: MintTokensCardProps) {
+export function MintTokensCard({ onSuccess }: MintTokensCardProps) {
+    const { address } = useAppKitAccount();
+  
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
    const { mintToken, isCreatingTask } = useWriteTodo();
@@ -27,16 +30,14 @@ export function MintTokensCard({ address, onSuccess }: MintTokensCardProps) {
       return;
     }
     setLoading(true);
-    const result = await mintToken(address,);
+    const result = await mintToken( address,amount);
     setLoading(false);
+  
 
-    // if (result.success) {
-    //   toast.success(result.message);
-    //   setAmount("");
-    //   onSuccess();
-    // } else {
-    //   toast.error(result.message);
-    // }
+   
+      toast.success("Tokens minted successfully!");
+      setAmount("");
+      onSuccess();
   };
 
   return (

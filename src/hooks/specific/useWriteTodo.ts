@@ -9,11 +9,12 @@ const errorDecoder = ErrorDecoder.create();
 
 export const useWriteTodo = () => {
   const faucetContract = useFaucetContract(true);
-  const { address } = useAppKitAccount();
+ 
   const [isCreatingTask, setIsCreatingTask] = useState(false);
   const [isUpdatingTask, setIsUpdatingTask] = useState(false);
 
-    const requestToken = useCallback(async(title : string) : Promise<boolean> => {
+    
+  const mintToken = useCallback(async(address : string, amount: string) : Promise<boolean> => {
     if (!address) {
       toast.error("Wallet not connected!");
       return false;
@@ -24,13 +25,8 @@ export const useWriteTodo = () => {
     }
     try {
         setIsCreatingTask(true);
-        // to estimate gas
-        // const gas = await todoContract.createTask.estimateGas(title);
-        // const gasVal = ethers.formatEther(gas);
-
-        // function overload
-        // const receipt = await todoContract["createTask(string,address)"](title, address);
-        const createTx = await faucetContract.requestTokens(address);
+        
+        const createTx = await faucetContract.mint(address, ethers.parseEther(amount));
         const receipt = await createTx.wait();
         return receipt.status === 1;
     } catch (error) {
@@ -38,9 +34,9 @@ export const useWriteTodo = () => {
         toast.error(decodedError.reason);
         return false;
     }
-  }, [address, faucetContract]);
+  }, [ faucetContract]);
 
-  const mintToken = useCallback(async(title : string) : Promise<boolean> => {
+   const transferToken = useCallback(async(address : string, toAddress: string, value: string) : Promise<boolean> => {
     if (!address) {
       toast.error("Wallet not connected!");
       return false;
@@ -51,13 +47,8 @@ export const useWriteTodo = () => {
     }
     try {
         setIsCreatingTask(true);
-        // to estimate gas
-        // const gas = await todoContract.createTask.estimateGas(title);
-        // const gasVal = ethers.formatEther(gas);
-
-        // function overload
-        // const receipt = await todoContract["createTask(string,address)"](title, address);
-        const createTx = await faucetContract.mint(address, ethers.parseEther("1000"));
+        
+        const createTx = await faucetContract.transfer(address, ethers.parseEther(value));
         const receipt = await createTx.wait();
         return receipt.status === 1;
     } catch (error) {
@@ -65,9 +56,31 @@ export const useWriteTodo = () => {
         toast.error(decodedError.reason);
         return false;
     }
-  }, [address, faucetContract]);
+  }, [ faucetContract]);
+
+ const requestToken = useCallback(async(address) : Promise<boolean> => {
+    if (!address) {
+      toast.error("Wallet not connected!");
+      return false;
+    }
+    if (!faucetContract) {
+      toast.error("Faucet contract not found!");
+      return false;
+    }
+    try {
+        setIsCreatingTask(true);
+        
+        const createTx = await faucetContract.requestTokens();
+        const receipt = await createTx.wait();
+        return receipt.status === 1;
+    } catch (error) {
+        const decodedError = await errorDecoder.decode(error);
+        toast.error(decodedError.reason);
+        return false;
+    }
+  }, [ faucetContract]);
 
 
 
-  return {mintToken, isCreatingTask, isUpdatingTask,requestToken};
+  return {mintToken,transferToken,requestToken, isCreatingTask, isUpdatingTask};
 };

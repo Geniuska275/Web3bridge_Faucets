@@ -4,23 +4,29 @@ import { Input } from "@/components/ui/input";
 import { transferTokens } from "../services/tokenService";
 import { ArrowRightLeft } from "lucide-react";
 import { toast } from "sonner";
+import { useWriteTodo } from "@/hooks/specific/useWriteTodo";
+import { useAppKitAccount } from "@reown/appkit/react";
+import { Value } from "@radix-ui/react-select";
 
 interface TransferTokensCardProps {
   address: string;
   onSuccess: () => void;
 }
 
-export function TransferTokensCard({ address, onSuccess }: TransferTokensCardProps) {
+export function TransferTokensCard({onSuccess }: TransferTokensCardProps) {
   const [toAddress, setToAddress] = useState("");
-  const [amount, setAmount] = useState("");
+  const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
+   const { transferToken } = useWriteTodo();
+    const { address } = useAppKitAccount();
+   
 
   const handleTransfer = async () => {
     if (!address) {
       toast.error("Connect your wallet first");
       return;
     }
-    const num = Number(amount);
+    const num = Number(value);
     if (!num || num <= 0) {
       toast.error("Enter a valid amount");
       return;
@@ -30,17 +36,15 @@ export function TransferTokensCard({ address, onSuccess }: TransferTokensCardPro
       return;
     }
     setLoading(true);
-    const result = await transferTokens(address, toAddress, num);
+    const result = await transferToken(address, toAddress, value);
+    console.log(result);
     setLoading(false);
 
-    if (result.success) {
-      toast.success(result.message);
+    
+      toast.success("Tokens transferred successfully!");
       setToAddress("");
-      setAmount("");
+      setValue("");
       onSuccess();
-    } else {
-      toast.error(result.message);
-    }
   };
 
   return (
@@ -50,7 +54,7 @@ export function TransferTokensCard({ address, onSuccess }: TransferTokensCardPro
         <h2 className="font-semibold text-lg">Transfer Tokens</h2>
       </div>
       <p className="text-sm text-muted-foreground mb-4">
-        Send VRD tokens to another wallet address.
+        Send GTK tokens to another wallet address.
       </p>
       <div className="space-y-3">
         <Input
@@ -63,8 +67,8 @@ export function TransferTokensCard({ address, onSuccess }: TransferTokensCardPro
           <Input
             type="number"
             placeholder="Amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
             min="1"
             className="font-mono text-sm"
           />
