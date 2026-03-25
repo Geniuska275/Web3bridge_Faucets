@@ -5,24 +5,28 @@ import { useCountdown, formatCountdown } from "../hooks/useCountdown";
 import { Droplets, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { useWriteTodo } from "@/hooks/specific/useWriteTodo";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 interface RequestTokensCardProps {
-  address: string;
+  // address: string;
   onSuccess: () => void;
 }
 
-export function RequestTokensCard({ address, onSuccess }: RequestTokensCardProps) {
+export function RequestTokensCard({ onSuccess }: RequestTokensCardProps) {
   const [loading, setLoading] = useState(false);
   const [cooldownMs, setCooldownMs] = useState(0);
   const { remaining, reset, isActive } = useCountdown(cooldownMs);
-   const { requestToken } = useWriteTodo;
+  const { requestToken,getRemainingTime } = useWriteTodo();
+  const { address } = useAppKitAccount();
+  
   
 
   useEffect(() => {
     if (!address) return;
-    getCooldownRemaining(address).then((ms) => {
-      setCooldownMs(ms);
-      reset(ms);
+    getRemainingTime(address).then((ms) => {
+      console.log("Cooldown remaining (ms):", ms);
+      // setCooldownMs(ms);
+      // reset(ms);
     });
   }, [address, reset]);
 
@@ -33,20 +37,20 @@ export function RequestTokensCard({ address, onSuccess }: RequestTokensCardProps
     }
     setLoading(true);
     const result = await requestToken(address);
+    console.log("result",result)
     setLoading(false);
 
-    if (result.success) {
-      toast.success(result.message);
+    if (result) {
+      toast.success("Tokens requested successfully! Check your balance shortly.");
       onSuccess();
-      const ms = await getCooldownRemaining(address);
-      setCooldownMs(ms);
-      reset(ms);
+      const ms = await getRemainingTime(address);
+      console.log(ms)
     } else {
-      if (result.cooldownMs) {
-        setCooldownMs(result.cooldownMs);
-        reset(result.cooldownMs);
-      }
-      toast.error(result.message);
+      // if (result.cooldownMs) {
+      //   setCooldownMs(result.cooldownMs);
+      //   reset(result.cooldownMs);
+      // }
+      toast.error("Failed to request tokens.");
     }
   };
 
@@ -76,7 +80,7 @@ export function RequestTokensCard({ address, onSuccess }: RequestTokensCardProps
           disabled={loading || !address}
           className="w-full active:scale-[0.97] transition-transform"
         >
-          {loading ? "Requesting..." : "Request 100 VRD"}
+          {loading ? "Requesting..." : "Request 100 GTK"}
         </Button>
       )}
     </div>

@@ -89,6 +89,7 @@ export async function getCooldownRemaining(address: string): Promise<number> {
 export async function requestTokens(address: string): Promise<{ success: boolean; message: string; cooldownMs?: number }> {
   await simulateDelay(800);
   if (!address) return { success: false, message: "Please enter a wallet address" };
+  
 
   const state = getUserState(address);
   const cooldown = await getCooldownRemaining(address);

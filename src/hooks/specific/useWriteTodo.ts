@@ -59,6 +59,7 @@ export const useWriteTodo = () => {
   }, [ faucetContract]);
 
  const requestToken = useCallback(async(address) : Promise<boolean> => {
+
     if (!address) {
       toast.error("Wallet not connected!");
       return false;
@@ -70,10 +71,13 @@ export const useWriteTodo = () => {
     try {
         setIsCreatingTask(true);
         
-        const createTx = await faucetContract.requestTokens();
+        const createTx = await faucetContract.requestToken();
+           console.log("requestTokens receipt",createTx);
         const receipt = await createTx.wait();
+        console.log("requestTokens receipt", receipt);
         return receipt.status === 1;
     } catch (error) {
+      console.error("Error requesting tokens:", error);
         const decodedError = await errorDecoder.decode(error);
         toast.error(decodedError.reason);
         return false;
@@ -81,6 +85,32 @@ export const useWriteTodo = () => {
   }, [ faucetContract]);
 
 
+const getRemainingTime = useCallback(async(address) : Promise<boolean> => {
 
-  return {mintToken,transferToken,requestToken, isCreatingTask, isUpdatingTask};
+    if (!address) {
+      toast.error("Wallet not connected!");
+      return false;
+    }
+    if (!faucetContract) {
+      toast.error("Faucet contract not found!");
+      return false;
+    }
+    try {
+        setIsCreatingTask(true);
+        
+        const createTx = await faucetContract.getRemainingTime();
+           console.log("requestTokens receipt",createTx);
+        const receipt = await createTx.wait();
+        console.log("requestTokens receipt", receipt);
+        return receipt.status === 1;
+    } catch (error) {
+      console.error("Error requesting tokens:", error);
+        const decodedError = await errorDecoder.decode(error);
+        toast.error(decodedError.reason);
+        return false;
+    }
+  }, [ faucetContract]);
+
+
+  return {mintToken,transferToken,requestToken,getRemainingTime, isCreatingTask, isUpdatingTask};
 };

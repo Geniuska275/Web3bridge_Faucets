@@ -53,6 +53,28 @@ export const useReadFaucet = () => {
 
 
 
+   const getCooldown = useCallback(async () => {
+    // if(!address){
+    //     toast.error("Wallet not connected!");
+    //     return;
+    // }
+    if (!faucetContract) {
+      toast.error("Faucet contract not found!");
+      return null;
+    }
+    try {
+  
+      const result= await faucetContract.cooldown();
+      return result;
+    } catch (error) {
+      return null;
+    } finally {
+      setIsLoadingTokenName(false);
+    }
+  }, [address, faucetContract]);
+
+
+
 
   const getTotalSupply = useCallback(async () => {
     // if(!address){
@@ -102,5 +124,6 @@ export const useReadFaucet = () => {
     getTotalSupply,
     getMaxSupply,
     getBalance,
+    getCooldown
   };
 };

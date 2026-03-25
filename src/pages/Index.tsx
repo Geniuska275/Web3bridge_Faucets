@@ -23,7 +23,7 @@ const Index = () => {
        
         <TokenInfoPanel address={address} refreshKey={refreshKey} />
         <div className="grid gap-6 md:grid-cols-3">
-          <RequestTokensCard address={address} onSuccess={handleRefresh} />
+          <RequestTokensCard onSuccess={handleRefresh} />
           <MintTokensCard address={address} onSuccess={handleRefresh} />
           <TransferTokensCard address={address} onSuccess={handleRefresh} />
         </div>
